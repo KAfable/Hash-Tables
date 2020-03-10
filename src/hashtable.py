@@ -83,20 +83,17 @@ class HashTable:
         '''
         Retrieve the value stored with the given key. Returns None if the key is not found.
         '''
-        print(f"Looking with key {key}")
         pair = self.storage[self._hash_mod(key)]
         if pair is None:
-            print(f"Found {pair}")
             return None
+        elif pair.key == key:
+            return pair.value
         else:
-            if pair.key == key:
-                return pair.value
-            else:
-                while pair.next is not None:
-                    pair = pair.next
-                    if pair.key == key:
-                        return pair.value
-                return None
+            while pair.next:
+                pair = pair.next
+                if pair.key == key:
+                    return pair.value
+            return None
 
     def resize(self):
         '''
