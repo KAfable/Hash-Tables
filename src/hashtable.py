@@ -42,12 +42,29 @@ class HashTable:
         index = self._hash_mod(key)
         if self.storage[index] is None:
             # found the item
+            # print(f"\nfree real estate, new pair")
             self.storage[index] = LinkedPair(key, value)
         else:
+            # print(f'\nwe have a collision')
+            # if the head of the LL matches the key, overwrite it
+            if self.storage[index].key == key:
+                # print(f'overwriting head with {value}')
+                self.storage[index].value = value
+            else:
+                # otherwise traverse the LL
+                current = self.storage[index]
+                while current.next is not None:
+                    current = current.next
+                    if current.key == key:
+                        current.value = value
+                        return
+                # if not found, insert at the end
+                current.next = LinkedPair(key, value)
+
             # already existing, add it to the beginning
-            old = self.storage[index]
-            self.storage[index] = LinkedPair(key, value)
-            self.storage[index].next = old
+            # old = self.storage[index]
+            # self.storage[index] = LinkedPair(key, value)
+            # self.storage[index].next = old
 
     def remove(self, key):
         '''Remove the value stored with the given key. Print a warning if the key is not found.'''
