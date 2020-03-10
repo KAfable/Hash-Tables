@@ -58,7 +58,7 @@ class HashTable:
         elif pair.key == key and pair.next is None:
             self.storage[self._hash_mod(key)] = None
             self.size -= 1
-        # if the pair found is the head of a linked list
+        # if the pair found is also the head of a linked list
         elif pair.key == key and pair.next is not None:
             # remove the head, and make next the head
             self.storage[self._hash_mod(pair.next.key)] = pair.next
