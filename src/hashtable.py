@@ -2,10 +2,10 @@
 
 
 class LinkedPair:
-    def __init__(self, key, value):
+    def __init__(self, key, value, next=None):
         self.key = key
         self.value = value
-        self.next = None
+        self.next = next
 
     def __repr__(self):
         return f"{{{self.key}, {self.value}}}, next {self.next}"
@@ -35,8 +35,8 @@ class HashTable:
         return self._hash(key) % self.capacity
 
     def insert(self, key, value):
-        ''' 
-        Store the value with the given key. Hash collisions should be handled with Linked List Chaining. 
+        '''
+        Store the value with the given key. Hash collisions should be handled with Linked List Chaining.
         '''
         self.size += 1
         index = self._hash_mod(key)
@@ -51,32 +51,52 @@ class HashTable:
 
     def remove(self, key):
         '''Remove the value stored with the given key. Print a warning if the key is not found.'''
-        ele = self.storage[self._hash_mod(key)]
-        if ele is None:
+        pair = self.storage[self._hash_mod(key)]
+        if pair is None:
             print("ERROR: Key not found")
-        else:
+        # if the pair found is the only node in the bucket
+        elif pair.key == key and pair.next is None:
             self.storage[self._hash_mod(key)] = None
             self.size -= 1
+        # if the pair found is the head of a linked list
+        elif pair.key == key and pair.next is not None:
+            # remove the head, and make next the head
+            self.storage[self._hash_mod(pair.next.key)] = pair.next
+            self.size -= 1
+        # if there was a collision and pair is head of a linked list
+        elif pair.key != key and pair.next is not None:
+            prev = pair
+            current = pair.next
+            while current is not None:
+                if current.key == key:
+                    # remove current from linked list
+                    prev.next = current.next
+                    current = None
+                    self.size -= 1
+                    return
+                prev = current
+                current = current.next
+            # if you don't find it in the collisions, error
+            print("ERROR: Key not found")
 
     def retrieve(self, key):
         '''
         Retrieve the value stored with the given key. Returns None if the key is not found.
         '''
+        print(f"Looking with key {key}")
         pair = self.storage[self._hash_mod(key)]
-        print(f"Found {pair} at index {self._hash_mod(key)}")
         if pair is None:
-            print(f"Nothing at the storage. Returning none.")
+            print(f"Found {pair}")
             return None
         else:
             if pair.key == key:
-                print(f"Found item at head of linked list: {pair}")
+                print(f"Found {pair}")
                 return pair.value
             else:
                 while pair.next is not None:
                     pair = pair.next
                     if pair.key == key:
-                        print(f"key {pair.key}")
-                        print(f"Node {pair}")
+                        print(f"Found {pair}")
                         return pair.value
                 return None
 
