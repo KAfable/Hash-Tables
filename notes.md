@@ -19,6 +19,8 @@
 
   - this happens quickly because it is just multiplying/adding: O(1)
 
+- you normally declare an array to the power of 2 so it fits nicely in memory
+
 ### Adding an element to end of array
 
     1. Take size of current array and increase by one element
@@ -39,5 +41,23 @@
 ### Adding an element to start of array
 
 - insertion into middle of an array is `O(k)` but wtf is k?
+
+## Hash tables
+
+- According to this image from [Big O Cheatsheet](https://www.bigocheatsheet.com/) ![https://www.bigocheatsheet.com/](https://i.imgur.com/sC1eSez.png)
+- they have constant time complexity for search, insertion, and deletion
+- also known as associative arrays, dictionaries, or objects
+- used to implement functionality underneath the hood behind objects in various languages
+- hash tables take a key, put it through a hash function
+
+### What is a Hash function?
+
+- one way mapping from arbitrary data to fixed data size and type
+- many different hashes with different attributes
+  - deterministic - same input should always have the same deterministic output, it can be repeated
+  - uniform distribution
+  - non-invertible
+  - continous vs non-continuous
+- the endgoal is to end up with an array index, hopefully one that doesn't collide
 
 ## Blockchain
