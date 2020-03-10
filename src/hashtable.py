@@ -90,13 +90,11 @@ class HashTable:
             return None
         else:
             if pair.key == key:
-                print(f"Found {pair}")
                 return pair.value
             else:
                 while pair.next is not None:
                     pair = pair.next
                     if pair.key == key:
-                        print(f"Found {pair}")
                         return pair.value
                 return None
 
