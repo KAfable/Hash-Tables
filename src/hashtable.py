@@ -1,6 +1,4 @@
-# '''
-# Linked List hash table key/value pair
-# '''
+'''Linked List hash table key/value pair'''
 
 
 class LinkedPair:
@@ -19,6 +17,7 @@ class HashTable:
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
+        self.size = 0
 
     def _hash(self, key):
         ''' Hash an arbitrary key and return an integer. You may replace the Python hash with DJB2 as a stretch goal. '''
@@ -39,6 +38,7 @@ class HashTable:
         ''' 
         Store the value with the given key. Hash collisions should be handled with Linked List Chaining. 
         '''
+        self.size += 1
         index = self._hash_mod(key)
         if self.storage[index] is None:
             # found the item
@@ -56,21 +56,27 @@ class HashTable:
             print("ERROR: Key not found")
         else:
             self.storage[self._hash_mod(key)] = None
+            self.size -= 1
 
     def retrieve(self, key):
         '''
         Retrieve the value stored with the given key. Returns None if the key is not found.
         '''
         pair = self.storage[self._hash_mod(key)]
+        print(f"Found {pair} at index {self._hash_mod(key)}")
         if pair is None:
+            print(f"Nothing at the storage. Returning none.")
             return None
         else:
             if pair.key == key:
+                print(f"Found item at head of linked list: {pair}")
                 return pair.value
             else:
                 while pair.next is not None:
                     pair = pair.next
                     if pair.key == key:
+                        print(f"key {pair.key}")
+                        print(f"Node {pair}")
                         return pair.value
                 return None
 
@@ -78,13 +84,19 @@ class HashTable:
         '''
         Doubles the capacity of the hash table and rehash all key/value pairs.
         '''
+        old_storage = self.storage.copy()
         self.capacity *= 2
-        # new_storage is an array of LinkedPairs
-        new_storage = [None] * self.capacity
-        for pair in self.storage:
+        # you want to be able to use insert, so you assign the old_storage first
+        self.storage = [None] * self.capacity
+        for pair in old_storage:
             if pair is not None:
-                new_storage[self._hash_mod(pair.key)] = pair
-        self.storage = new_storage
+                self.insert(pair.key, pair.value)
+                # if the pair is also a Linked List, traverse down there and add onto it
+                if pair.next is not None:
+                    current = pair.next
+                    while current is not None:
+                        self.insert(current.key, current.value)
+                        current = current.next
 
 
 if __name__ == "__main__":
